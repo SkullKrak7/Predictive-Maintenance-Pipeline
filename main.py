@@ -42,3 +42,6 @@ plt.figure(figsize=(10, 6))
 sns.heatmap(df.corr(), annot=True, cmap="coolwarm")
 plt.title("Feature Correlation Heatmap")
 plt.show()
+
+#drop air temperature as it highly correlates with process temperature
+df.drop(columns=['Air temperature [K]'], inplace=True)
