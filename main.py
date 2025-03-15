@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pickle
+from sklearn.preprocessing import LabelEncoder
 
 #load data
 df = pd.read_csv("predictive_maintenance.csv")
@@ -23,4 +24,11 @@ print(df.isna().sum())
 #make a histogram for frequency distribution
 df.hist(figsize=(12, 6))
 plt.show()
+
+#perform one-hot encoding on type column
+df = pd.get_dummies(df, columns=['Type'], drop_first=True)
+
+#perform label encoding on failure type column
+label_encoder = LabelEncoder()
+df['Failure Type'] = label_encoder.fit_transform(df['Failure Type'])
 
