@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pickle
 from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.ensemble import RandomForestClassifier
 
 #load data
 df = pd.read_csv("predictive_maintenance.csv")
@@ -45,3 +46,15 @@ plt.show()
 
 #drop air temperature as it highly correlates with process temperature
 df.drop(columns=['Air temperature [K]'], inplace=True)
+
+#define features and target
+X = df.drop(columns=['Target'])
+y = df['Target']
+
+#perform feature importance analysis using random forest classifier
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf.fit(X, y)
+feature_importances = pd.Series(rf.feature_importances_, index=X.columns).sort_values(ascending=False)
+feature_importances.plot(kind="bar", color="skyblue")
+plt.title("Feature Importance - Random Forest")
+plt.show()
