@@ -58,3 +58,9 @@ feature_importances = pd.Series(rf.feature_importances_, index=X.columns).sort_v
 feature_importances.plot(kind="bar", color="skyblue")
 plt.title("Feature Importance - Random Forest")
 plt.show()
+
+#drop failure type due to chances of data leakage
+df.drop(columns=['Failure Type'], inplace=True)
+
+#drop less impportant features
+df.drop(columns=['Type_L', 'Type_M'], inplace=True)
