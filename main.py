@@ -19,3 +19,8 @@ print(df.isna().sum())
 df.dropna(inplace=True)
 print("Missing Values After Drop:")
 print(df.isna().sum())
+
+#make a histogram for frequency distribution
+df.hist(figsize=(12, 6))
+plt.show()
+
