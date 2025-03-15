@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pickle
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 #load data
 df = pd.read_csv("predictive_maintenance.csv")
@@ -32,3 +32,7 @@ df = pd.get_dummies(df, columns=['Type'], drop_first=True)
 label_encoder = LabelEncoder()
 df['Failure Type'] = label_encoder.fit_transform(df['Failure Type'])
 
+#scale to normalise the data
+scaler = StandardScaler()
+scaled_features = ['Air temperature [K]', 'Process temperature [K]', 'Rotational speed [rpm]', 'Torque [Nm]', 'Tool wear [min]']
+df[scaled_features] = scaler.fit_transform(df[scaled_features])
