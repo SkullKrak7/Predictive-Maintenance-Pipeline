@@ -36,3 +36,9 @@ df['Failure Type'] = label_encoder.fit_transform(df['Failure Type'])
 scaler = StandardScaler()
 scaled_features = ['Air temperature [K]', 'Process temperature [K]', 'Rotational speed [rpm]', 'Torque [Nm]', 'Tool wear [min]']
 df[scaled_features] = scaler.fit_transform(df[scaled_features])
+
+#make a heatmap to see feature correlation
+plt.figure(figsize=(10, 6))
+sns.heatmap(df.corr(), annot=True, cmap="coolwarm")
+plt.title("Feature Correlation Heatmap")
+plt.show()
