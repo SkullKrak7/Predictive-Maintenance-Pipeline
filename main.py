@@ -94,3 +94,8 @@ y_pred = xgb_model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Model Accuracy: {accuracy:.4f}")
 print(classification_report(y_test, y_pred))
+
+#Save the trained model
+model_info = {"model": xgb_model, "features": X_train.columns.to_list()}
+with open("model.pkl", "wb") as file:
+    pickle.dump(model_info, file)
