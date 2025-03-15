@@ -5,6 +5,7 @@ import seaborn as sns
 import pickle
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
 
 #load data
 df = pd.read_csv("predictive_maintenance.csv")
@@ -54,13 +55,20 @@ y = df['Target']
 #perform feature importance analysis using random forest classifier
 rf = RandomForestClassifier(n_estimators=100, random_state=42)
 rf.fit(X, y)
-feature_importances = pd.Series(rf.feature_importances_, index=X.columns).sort_values(ascending=False)
-feature_importances.plot(kind="bar", color="skyblue")
+feature_importance = pd.Series(rf.feature_importances_, index=X.columns).sort_values(ascending=False)
+feature_importance.plot(kind="bar", color="skyblue")
 plt.title("Feature Importance - Random Forest")
 plt.show()
 
 #drop failure type due to chances of data leakage
 df.drop(columns=['Failure Type'], inplace=True)
 
-#drop less impportant features
+#drop less important features
 df.drop(columns=['Type_L', 'Type_M'], inplace=True)
+
+#update features and target
+X = df.drop(columns=['Target'])
+y = df['Target']
+
+#split data into train and test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
