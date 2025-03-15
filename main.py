@@ -72,3 +72,7 @@ y = df['Target']
 
 #split data into train and test
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+#convert column names
+X_train.rename(columns=lambda x: x.strip().replace("[", "").replace("]", "").replace(" ", "_"), inplace=True)
+X_test.rename(columns=lambda x: x.strip().replace("[", "").replace("]", "").replace(" ", "_"), inplace=True)
