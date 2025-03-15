@@ -6,6 +6,8 @@ import pickle
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
+from xgboost import XGBClassifier
+from sklearn.metrics import accuracy_score, classification_report
 
 #load data
 df = pd.read_csv("predictive_maintenance.csv")
@@ -76,3 +78,13 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 #convert column names
 X_train.rename(columns=lambda x: x.strip().replace("[", "").replace("]", "").replace(" ", "_"), inplace=True)
 X_test.rename(columns=lambda x: x.strip().replace("[", "").replace("]", "").replace(" ", "_"), inplace=True)
+
+#Train the model using XGBoost
+xgb_model = XGBClassifier(
+    eval_metric='logloss',
+    tree_method='hist',
+    device='cuda',
+    scale_pos_weight=len(y_train[y_train == 0]) / len(y_train[y_train == 1])
+)
+
+xgb_model.fit(X_train, y_train)
