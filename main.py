@@ -88,3 +88,9 @@ xgb_model = XGBClassifier(
 )
 
 xgb_model.fit(X_train, y_train)
+
+#evaluate model performance
+y_pred = xgb_model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Model Accuracy: {accuracy:.4f}")
+print(classification_report(y_test, y_pred))
