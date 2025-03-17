@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Predictive Maintenance</title>
+</head>
+<body>
+    <h2>Machine Failure Prediction</h2>
+    <form method="POST">
+        Process Temperature (K) 290-320: <input type="number" step="any" name="Process_temperature_K" min="290" max="320" required><br>
+        Rotational Speed (rpm) 1000-3000: <input type="number" step="any" name="Rotational_speed_rpm" min="1000" max="3000" required><br>
+        Torque (Nm) 10-80: <input type="number" step="any" name="Torque_Nm" min="10" max="80" required><br>
+        Tool Wear (min) 0-250: <input type="number" step="any" name="Tool_wear_min" min="0" max="250" required><br>
+        <input type="submit" value="Predict">
+    </form>
+
+    {% if prediction %}
+        <h3>Prediction: {{ prediction }}</h3>
+    {% endif %}
+</body>
+</html>
