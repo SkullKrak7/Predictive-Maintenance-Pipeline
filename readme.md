@@ -64,6 +64,9 @@ predictive-maintenance/
 ├── Dockerfile                  # Docker container config
 └── README.md
 ```
+Note:
+A pre-trained model (saved_model.pkl) is included for demo purposes.
+You can retrain it using train_model.py on predictive_maintenance.csv.
 
 ## GitHub Topics
 
