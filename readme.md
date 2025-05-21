@@ -1,78 +1,70 @@
-# 🛠️ Predictive Maintenance Pipeline with Flask Dashboard
+# Predictive Maintenance Pipeline with Flask Dashboard
 
-This project builds a complete machine learning pipeline for predictive maintenance using a dataset of industrial machine failures.  
-A lightweight Flask web application is included to serve real-time predictions based on the trained model.
+This repository contains a full machine learning pipeline for predictive maintenance.
+It includes data processing, model training with XGBoost, and a simple Flask web application
+to serve real-time predictions.
 
-## 🚀 Project Overview
+## Project Overview
 
-Predictive maintenance anticipates equipment failures before they occur, helping reduce downtime and maintenance costs.  
-This project follows a structured ML workflow including data preprocessing, feature selection, model training, evaluation, and deployment.
+Predictive maintenance involves forecasting equipment failures before they occur, helping reduce downtime and cost. This project follows a complete ML workflow:
 
-## 🗂️ Project Workflow
+* Data loading and exploration
+* Cleaning and preprocessing
+* Feature engineering and selection
+* Model training and evaluation
+* Saving the trained model
+* Deploying a Flask dashboard for live predictions
 
-- **Data Loading & Exploration**  
-  Import and inspect the predictive maintenance dataset.
+## Technologies Used
 
-- **Data Cleaning & Preprocessing**  
-  - Drop irrelevant columns  
-  - Handle missing values  
-  - Encode categorical features  
-  - Normalize numerical features
+* Python 3
+* pandas, numpy
+* scikit-learn
+* xgboost
+* Flask (with HTML/Jinja2)
 
-- **Feature Engineering & Selection**  
-  - Correlation analysis to remove redundant features  
-  - Feature importance analysis using Random Forest
-
-- **Model Training & Evaluation**  
-  - Train an XGBoost classifier  
-  - Evaluate performance using accuracy, precision, recall, and F1-score
-
-- **Model Saving**  
-  Save the final model (`.pkl` format) for later inference.
-
-- **Flask Dashboard Deployment**  
-  Deploy a web app where users can input sensor data and receive live fault predictions.
-
-## 💻 Technologies Used
-
-- Python 3
-- pandas
-- numpy
-- scikit-learn
-- xgboost
-- flask (for web dashboard)
-- HTML / Jinja2 templates
-
-## 🛠️ Setup Instructions
+## Setup Instructions
 
 ```bash
-# Create a virtual environment
 python -m venv env
-source env/bin/activate  # or 'env\Scripts\activate' on Windows
+source env/bin/activate  # or env\Scripts\activate on Windows
 
-# Install dependencies
 pip install -r requirements.txt
 
-# Run the Flask app
 python flask_app.py
 ```
 
-Visit [http://127.0.0.1:5000](http://127.0.0.1:5000) in your browser to use the prediction dashboard.
+Visit `http://127.0.0.1:5000` in your browser to use the dashboard.
 
-## 📁 Folder Structure
+## Docker Usage
 
-```text
+To build and run the app using Docker:
+
+```bash
+# Build the image
+docker build -t predictive-maintenance .
+
+# Run the container
+docker run -p 5000:5000 predictive-maintenance
+```
+
+Then open `http://localhost:5000` in your browser to use the dashboard.
+
+## Folder Structure
+
+```
 predictive-maintenance/
-├── templates/                  # HTML files for the dashboard
-│   └── index.html               # Main web page
-├── flask_app.py                 # Flask app code
-├── main.py                      # Model training and saving
-├── predictive_maintenance.csv   # Dataset
-├── saved_model.pkl              # Trained ML model
-├── requirements.txt             # Required libraries
+├── templates/                  # HTML templates
+│   └── index.html
+├── flask_app.py                # Flask app code
+├── train_model.py              # Model training and saving
+├── predictive_maintenance.csv  # Dataset
+├── saved_model.pkl             # Trained model (optional)
+├── requirements.txt            # Python dependencies
+├── Dockerfile                  # Docker container config
 └── README.md
 ```
 
-## 📣 Contributions
+## GitHub Topics
 
-Open to suggestions and improvements! Feel free to fork or raise an issue.
+machine-learning, predictive-maintenance, flask, xgboost, dashboard
