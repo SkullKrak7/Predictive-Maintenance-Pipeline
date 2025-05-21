@@ -1,8 +1,6 @@
 # Predictive Maintenance Pipeline with Flask Dashboard
 
-This repository contains a full machine learning pipeline for predictive maintenance.
-It includes data processing, model training with XGBoost, and a simple Flask web application
-to serve real-time predictions.
+This repository contains a full machine learning pipeline for predictive maintenance. It includes data processing, model training with XGBoost, and a simple Flask web application to serve real-time predictions.
 
 ## Project Overview
 
@@ -12,8 +10,11 @@ Predictive maintenance involves forecasting equipment failures before they occur
 * Cleaning and preprocessing
 * Feature engineering and selection
 * Model training and evaluation
-* Saving the trained model
+* Handling class imbalance using scale\_pos\_weight
+* Saving the trained model and scaler
 * Deploying a Flask dashboard for live predictions
+
+Note: Future work includes applying SMOTE for rare class oversampling and threshold tuning to optimize recall on the failure class.
 
 ## Technologies Used
 
@@ -22,19 +23,18 @@ Predictive maintenance involves forecasting equipment failures before they occur
 * scikit-learn
 * xgboost
 * Flask (with HTML/Jinja2)
+* Docker
 
 ## Setup Instructions
 
 ```bash
-python -m venv env
-source env/bin/activate  # or env\Scripts\activate on Windows
-
+python -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
 pip install -r requirements.txt
-
 python flask_app.py
 ```
 
-Visit `http://127.0.0.1:5000` in your browser to use the dashboard.
+Visit [http://127.0.0.1:5000](http://127.0.0.1:5000) in your browser to use the dashboard.
 
 ## Docker Usage
 
@@ -48,7 +48,7 @@ docker build -t predictive-maintenance .
 docker run -p 5000:5000 predictive-maintenance
 ```
 
-Then open `http://localhost:5000` in your browser to use the dashboard.
+Then open [http://localhost:5000](http://localhost:5000) in your browser.
 
 ## Folder Structure
 
@@ -59,15 +59,18 @@ predictive-maintenance/
 ├── flask_app.py                # Flask app code
 ├── train_model.py              # Model training and saving
 ├── predictive_maintenance.csv  # Dataset
-├── saved_model.pkl             # Trained model (optional)
+├── model.pkl                   # Trained model (with scaler)
 ├── requirements.txt            # Python dependencies
 ├── Dockerfile                  # Docker container config
 └── README.md
 ```
-Note:
-A pre-trained model (saved_model.pkl) is included for demo purposes.
-You can retrain it using train_model.py on predictive_maintenance.csv.
 
-## GitHub Topics
+## Notes
 
-machine-learning, predictive-maintenance, flask, xgboost, dashboard
+* Class imbalance (approximately 3 percent failures) handled with scale\_pos\_weight in XGBoost.
+* The model and scaler are saved together to ensure consistent prediction during inference.
+* Clean column naming and consistent feature preprocessing ensures reproducibility.
+
+## License
+
+This project is licensed under the MIT License. See LICENSE for details.
