@@ -22,11 +22,12 @@ def home():
 
         # Predict failure
         prediction = model.predict(input_data)[0]
-        result = "⚠️ Failure Expected!" if prediction == 1 else "✅ No Failure Expected"
+        result = "Failure Expected!" if prediction == 1 else "No Failure Expected"
 
         return render_template('index.html', prediction=result)
 
     return render_template('index.html', prediction="")
 
-if __name__ == "__main__":
-    app.run(debug=True)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+
