@@ -2,19 +2,77 @@
 <html>
 <head>
     <title>Predictive Maintenance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 50px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        input[type="number"] {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #e2e3e5;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <h2>Machine Failure Prediction</h2>
     <form method="POST">
-        Process Temperature (K) 290-320: <input type="number" step="any" name="Process_temperature_K" min="290" max="320" required><br>
-        Rotational Speed (rpm) 1000-3000: <input type="number" step="any" name="Rotational_speed_rpm" min="1000" max="3000" required><br>
-        Torque (Nm) 10-80: <input type="number" step="any" name="Torque_Nm" min="10" max="80" required><br>
-        Tool Wear (min) 0-250: <input type="number" step="any" name="Tool_wear_min" min="0" max="250" required><br>
+        Process Temperature (K) 290–320:<br>
+        <input type="number" step="any" name="Process_temperature_K" min="290" max="320" required><br>
+
+        Rotational Speed (rpm) 1000–3000:<br>
+        <input type="number" step="any" name="Rotational_speed_rpm" min="1000" max="3000" required><br>
+
+        Torque (Nm) 10–80:<br>
+        <input type="number" step="any" name="Torque_Nm" min="10" max="80" required><br>
+
+        Tool Wear (min) 0–250:<br>
+        <input type="number" step="any" name="Tool_wear_min" min="0" max="250" required><br>
+
         <input type="submit" value="Predict">
     </form>
 
     {% if prediction %}
-        <h3>Prediction: {{ prediction }}</h3>
+        <div class="result">Prediction: {{ prediction }}</div>
     {% endif %}
 </body>
 </html>

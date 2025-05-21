@@ -9,93 +9,71 @@ from sklearn.model_selection import train_test_split
 from xgboost import XGBClassifier
 from sklearn.metrics import accuracy_score, classification_report
 
-#load data
+# Load data
 df = pd.read_csv("predictive_maintenance.csv")
 print("Initial Data Shape:", df.shape)
 print(df.head())
 
-#drop unnecessary columns
+# Drop unnecessary columns
 df.drop(columns=['UDI', 'Product ID'], inplace=True)
-print("Data Shape after dropping useless columns:", df.shape)
 
-#handle missing values
-print("Missing Values Before Drop:")
-print(df.isna().sum())
+# Handle missing values
 df.dropna(inplace=True)
-print("Missing Values After Drop:")
-print(df.isna().sum())
 
-#make a histogram for frequency distribution
-df.hist(figsize=(12, 6))
-plt.show()
-
-#perform one-hot encoding on type column
+# One-hot encode 'Type'
 df = pd.get_dummies(df, columns=['Type'], drop_first=True)
 
-#perform label encoding on failure type column
+# Label encode 'Failure Type' (for later drop)
 label_encoder = LabelEncoder()
 df['Failure Type'] = label_encoder.fit_transform(df['Failure Type'])
 
-#scale to normalise the data
+# Drop unwanted or leakage-prone features BEFORE scaling
+df.drop(columns=[
+    'Air temperature [K]',    # high correlation
+    'Failure Type',           # data leakage
+    'Type_L', 'Type_M'        # low importance
+], inplace=True)
+
+# Scale the remaining features
+scaled_features = [
+    'Process temperature [K]',
+    'Rotational speed [rpm]',
+    'Torque [Nm]',
+    'Tool wear [min]'
+]
 scaler = StandardScaler()
-scaled_features = ['Air temperature [K]', 'Process temperature [K]', 'Rotational speed [rpm]', 'Torque [Nm]', 'Tool wear [min]']
 df[scaled_features] = scaler.fit_transform(df[scaled_features])
 
-#make a heatmap to see feature correlation
-plt.figure(figsize=(10, 6))
-sns.heatmap(df.corr(), annot=True, cmap="coolwarm")
-plt.title("Feature Correlation Heatmap")
-plt.show()
-
-#drop air temperature as it highly correlates with process temperature
-df.drop(columns=['Air temperature [K]'], inplace=True)
-
-#define features and target
+# Prepare features and target
 X = df.drop(columns=['Target'])
 y = df['Target']
 
-#perform feature importance analysis using random forest classifier
-rf = RandomForestClassifier(n_estimators=100, random_state=42)
-rf.fit(X, y)
-feature_importance = pd.Series(rf.feature_importances_, index=X.columns).sort_values(ascending=False)
-feature_importance.plot(kind="bar", color="skyblue")
-plt.title("Feature Importance - Random Forest")
-plt.show()
+# Rename columns to safe format
+X.rename(columns=lambda x: x.strip().replace("[", "").replace("]", "").replace(" ", "_"), inplace=True)
 
-#drop failure type due to chances of data leakage
-df.drop(columns=['Failure Type'], inplace=True)
-
-#drop less important features
-df.drop(columns=['Type_L', 'Type_M'], inplace=True)
-
-#update features and target
-X = df.drop(columns=['Target'])
-y = df['Target']
-
-#split data into train and test
+# Train-test split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-#convert column names
-X_train.rename(columns=lambda x: x.strip().replace("[", "").replace("]", "").replace(" ", "_"), inplace=True)
-X_test.rename(columns=lambda x: x.strip().replace("[", "").replace("]", "").replace(" ", "_"), inplace=True)
-
-#Train the model using XGBoost
+# Train XGBoost model
 xgb_model = XGBClassifier(
     eval_metric='logloss',
     tree_method='hist',
     device='cuda',
     scale_pos_weight=len(y_train[y_train == 0]) / len(y_train[y_train == 1])
 )
-
 xgb_model.fit(X_train, y_train)
 
-#evaluate model performance
+# Evaluate
 y_pred = xgb_model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Model Accuracy: {accuracy:.4f}")
 print(classification_report(y_test, y_pred))
 
-#Save the trained model
-model_info = {"model": xgb_model, "features": X_train.columns.to_list()}
+# Save model, scaler, and feature names
+model_info = {
+    "model": xgb_model,
+    "scaler": scaler,
+    "features": X_train.columns.to_list()
+}
 with open("model.pkl", "wb") as file:
     pickle.dump(model_info, file)
