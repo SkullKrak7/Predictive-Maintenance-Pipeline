@@ -35,4 +35,7 @@ docker-compose.override.yml
 *.tar.gz
 *.tgz
 
-saved_model.pkl
+model.pkl
+model.pkl
+outputs/*
+!outputs/metrics.json
