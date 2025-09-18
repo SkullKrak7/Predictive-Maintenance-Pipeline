@@ -1,13 +1,15 @@
+import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pickle
+import json
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from xgboost import XGBClassifier
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, precision_recall_fscore_support
 
 # Load data
 df = pd.read_csv("predictive_maintenance.csv")
@@ -77,3 +79,14 @@ model_info = {
 }
 with open("model.pkl", "wb") as file:
     pickle.dump(model_info, file)
+
+prec, rec, f1, supp = precision_recall_fscore_support(y_test, y_pred, labels=[0,1], zero_division=0)
+metrics = {
+    "accuracy": float(accuracy),
+    "class_0": {"precision": float(prec[0]), "recall": float(rec[0]), "f1": float(f1[0]), "support": int(supp[0])},
+    "class_1": {"precision": float(prec[1]), "recall": float(rec[1]), "f1": float(f1[1]), "support": int(supp[1])},
+}
+os.makedirs("outputs", exist_ok=True)
+with open(os.path.join("outputs", "metrics.json"), "w") as f:
+    json.dump(metrics, f, indent=2)
+print("Saved metrics to outputs/metrics.json")
