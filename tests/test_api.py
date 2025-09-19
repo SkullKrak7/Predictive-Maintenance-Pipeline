@@ -1,7 +1,8 @@
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-
+import json
+from flask_app import app
 import warnings
 warnings.filterwarnings(
     "ignore",
@@ -9,9 +10,6 @@ warnings.filterwarnings(
     category=UserWarning,
     module=r"sklearn\.utils\.validation",
 )
-
-import json
-from flask_app import app
 
 def test_health_ok():
     app.testing = True
