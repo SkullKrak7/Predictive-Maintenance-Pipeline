@@ -1,78 +1,78 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-    <title>Predictive Maintenance</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 50px;
-        }
-
-        h2 {
-            margin-bottom: 20px;
-        }
-
-        form {
-            background: #fff;
-            padding: 20px 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        input[type="number"] {
-            width: 100%;
-            margin-bottom: 15px;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
-
-        input[type="submit"] {
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            background-color: #e2e3e5;
-            font-weight: bold;
-        }
-    </style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Predictive Maintenance</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;background:#0b1220;color:#e8eefc}
+    .wrap{max-width:880px;margin:40px auto;padding:24px}
+    .card{background:#141c2f;border:1px solid #1f2b45;border-radius:12px;padding:20px;margin-bottom:16px}
+    label{display:block;margin:8px 0 4px}
+    input{width:100%;padding:10px;border-radius:8px;border:1px solid #2b3a5e;background:#0f1627;color:#e8eefc}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .col{flex:1 1 240px}
+    button{background:#3b82f6;border:none;padding:10px 16px;border-radius:8px;color:#fff;cursor:pointer}
+    button:hover{background:#2563eb}
+    .muted{color:#9bb3d6}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
+  </style>
 </head>
 <body>
-    <h2>Machine Failure Prediction</h2>
-    <form method="POST">
-        Process Temperature (K) 290–320:<br>
-        <input type="number" step="any" name="Process_temperature_K" min="290" max="320" required><br>
+  <div class="wrap">
+    <h1>Predictive Maintenance</h1>
+    <p class="muted">Enter parameters and get a failure probability instantly.</p>
 
-        Rotational Speed (rpm) 1000–3000:<br>
-        <input type="number" step="any" name="Rotational_speed_rpm" min="1000" max="3000" required><br>
+    <div class="card">
+      <form method="post" action="/ui/predict">
+        <div class="row">
+          <div class="col">
+            <label for="rotational_speed">Rotational speed (rpm)</label>
+            <input id="rotational_speed" name="rotational_speed" type="number" step="0.1" min="1100" max="3000" required>
+          </div>
+          <div class="col">
+            <label for="torque">Torque (Nm)</label>
+            <input id="torque" name="torque" type="number" step="0.1" min="0" max="100" required>
+          </div>
+          <div class="col">
+            <label for="tool_wear">Tool wear (min)</label>
+            <input id="tool_wear" name="tool_wear" type="number" step="0.1" min="0" max="300" required>
+          </div>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <div class="col">
+            <label for="threshold">Decision threshold</label>
+            <input id="threshold" name="threshold" type="number" step="0.01" min="0" max="1" value="0.5">
+          </div>
+          <div class="col" style="align-self:end">
+            <button type="submit">Predict</button>
+          </div>
+        </div>
+      </form>
+    </div>
 
-        Torque (Nm) 10–80:<br>
-        <input type="number" step="any" name="Torque_Nm" min="10" max="80" required><br>
-
-        Tool Wear (min) 0–250:<br>
-        <input type="number" step="any" name="Tool_wear_min" min="0" max="250" required><br>
-
-        <input type="submit" value="Predict">
-    </form>
-
-    {% if prediction %}
-        <div class="result">Prediction: {{ prediction }}</div>
+    {% if result %}
+    <div class="card grid">
+      <div>
+        <h3>Prediction</h3>
+        <p class="mono">failure_probability: {{ result.failure_probability | round(6) }}</p>
+        <p class="mono">predicted_label: {{ result.predicted_label }}</p>
+        <p class="mono">threshold: {{ result.threshold }}</p>
+      </div>
+      <div>
+        <h3>Metrics</h3>
+        <p class="mono">uptime_s: {{ metrics.uptime_s }}</p>
+        <p class="mono">requests_total: {{ metrics.requests_total }}</p>
+        <p class="mono">latency_p95_ms: {{ metrics.latency_p95_ms }}</p>
+      </div>
+    </div>
     {% endif %}
+
+    <div class="card">
+      <h3>API</h3>
+      <p class="muted mono">POST /predict {"rotational_speed":1500,"torque":30,"tool_wear":5}?threshold=0.5</p>
+    </div>
+  </div>
 </body>
 </html>
