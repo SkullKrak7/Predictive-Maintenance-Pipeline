@@ -36,3 +36,13 @@ docker-compose.override.yml
 *.tgz
 
 saved_model.pkl
+
+model.pkl
+outputs/*
+!outputs/metrics.json
+
+data/
+
+screenshots/
+*.png
+*.jpg
