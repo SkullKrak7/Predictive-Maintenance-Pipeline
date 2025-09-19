@@ -52,7 +52,9 @@ y_full = df["Target"].values
 # 7. Fit RandomForest for feature importances, save bar plot for audit
 rf = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
 rf.fit(X_full, y_full)
-feature_importance = pd.Series(rf.feature_importances_, index=X_full.columns).sort_values(ascending=False)
+feature_importance = pd.Series(
+    rf.feature_importances_, index=X_full.columns
+).sort_values(ascending=False)
 plt.figure(figsize=(8, 5))
 feature_importance.iloc[::-1].plot(kind="barh", color="skyblue")
 plt.title("Feature Importance - Random Forest")
@@ -77,8 +79,14 @@ y = df["Target"].values
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
-X_train.columns = [c.strip().replace("[", "").replace("]", "").replace(" ", "_") for c in X_train.columns]
-X_test.columns = [c.strip().replace("[", "").replace("]", "").replace(" ", "_") for c in X_test.columns]
+X_train.columns = [
+    c.strip().replace("[", "").replace("]", "").replace(" ", "_")
+    for c in X_train.columns
+]
+X_test.columns = [
+    c.strip().replace("[", "").replace("]", "").replace(" ", "_")
+    for c in X_test.columns
+]
 
 # 12. Train XGBoost with balanced class weight, using standard params for CI
 xgb_model = XGBClassifier(

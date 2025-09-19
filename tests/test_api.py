@@ -1,12 +1,13 @@
 import warnings
+import json
+from flask_app import app
+
 warnings.filterwarnings(
     "ignore",
     message="X does not have valid feature names, but StandardScaler was fitted with feature names",
     category=UserWarning,
 )
 
-import json
-from flask_app import app
 
 def test_health_ok():
     app.testing = True
@@ -14,6 +15,7 @@ def test_health_ok():
     r = c.get("/health")
     assert r.status_code == 200
     assert r.get_json()["status"] == "ok"
+
 
 def test_predict_valid():
     app.testing = True
@@ -28,11 +30,17 @@ def test_predict_valid():
     assert isinstance(body["failure_probability"], float)
     assert isinstance(body["predicted_label"], int)
 
+
 def test_predict_invalid_422():
     app.testing = True
     c = app.test_client()
-    r = c.post("/predict", data=json.dumps({"rotational_speed": "fast"}), content_type="application/json")
+    r = c.post(
+        "/predict",
+        data=json.dumps({"rotational_speed": "fast"}),
+        content_type="application/json",
+    )
     assert r.status_code == 422
+
 
 def test_predict_bounds():
     app.testing = True
